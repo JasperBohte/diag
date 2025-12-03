@@ -276,133 +276,133 @@
   </div>
 
   <script>
-    // -------- BASISINFO --------
-    function initSystemInfo() {
-      const ua = navigator.userAgent || "";
-      document.getElementById("browserInfo").textContent = ua || "Onbekend";
+  // -------- BASISINFO --------
+  function initSystemInfo() {
+    const ua = navigator.userAgent || "";
+    document.getElementById("browserInfo").textContent = ua || "Onbekend";
 
-      document.getElementById("osInfo").textContent =
-        navigator.platform || "Onbekend";
+    document.getElementById("osInfo").textContent =
+      navigator.platform || "Onbekend";
 
-      document.getElementById("langInfo").textContent =
-        navigator.language || "Onbekend";
+    document.getElementById("langInfo").textContent =
+      navigator.language || "Onbekend";
 
-      document.getElementById("cpuInfo").textContent =
-        (navigator.hardwareConcurrency
-          ? navigator.hardwareConcurrency + " cores"
-          : "Niet beschikbaar");
+    document.getElementById("cpuInfo").textContent =
+      (navigator.hardwareConcurrency
+        ? navigator.hardwareConcurrency + " cores"
+        : "Niet beschikbaar");
 
-      document.getElementById("ramInfo").textContent =
-        (navigator.deviceMemory
-          ? navigator.deviceMemory + " GB (geschat)"
-          : "Niet beschikbaar");
+    document.getElementById("ramInfo").textContent =
+      (navigator.deviceMemory
+        ? navigator.deviceMemory + " GB (geschat)"
+        : "Niet beschikbaar");
 
-      const w = window.screen?.width;
-      const h = window.screen?.height;
-      document.getElementById("screenInfo").textContent =
-        (w && h) ? `${w}×${h}` : "Onbekend";
+    const w = window.screen?.width;
+    const h = window.screen?.height;
+    document.getElementById("screenInfo").textContent =
+      (w && h) ? `${w}×${h}` : "Onbekend";
 
-      document.getElementById("onlineInfo").textContent =
-        navigator.onLine ? "Online" : "Offline";
+    document.getElementById("onlineInfo").textContent =
+      navigator.onLine ? "Online" : "Offline";
 
-      const conn = navigator.connection || navigator.webkitConnection || navigator.mozConnection;
-      if (conn) {
-        document.getElementById("connType").textContent = conn.effectiveType || conn.type || "Onbekend";
-        document.getElementById("connDownlink").textContent =
-          conn.downlink ? conn.downlink + " Mbit/s (schatting)" : "Niet beschikbaar";
-        document.getElementById("connRtt").textContent =
-          conn.rtt ? conn.rtt + " ms (schatting)" : "Niet beschikbaar";
-      } else {
-        document.getElementById("connType").textContent = "Niet beschikbaar";
-        document.getElementById("connDownlink").textContent = "Niet beschikbaar";
-        document.getElementById("connRtt").textContent = "Niet beschikbaar";
-      }
+    const conn = navigator.connection || navigator.webkitConnection || navigator.mozConnection;
+    if (conn) {
+      document.getElementById("connType").textContent = conn.effectiveType || conn.type || "Onbekend";
+      document.getElementById("connDownlink").textContent =
+        conn.downlink ? conn.downlink + " Mbit/s (schatting)" : "Niet beschikbaar";
+      document.getElementById("connRtt").textContent =
+        conn.rtt ? conn.rtt + " ms (schatting)" : "Niet beschikbaar";
+    } else {
+      document.getElementById("connType").textContent = "Niet beschikbaar";
+      document.getElementById("connDownlink").textContent = "Niet beschikbaar";
+      document.getElementById("connRtt").textContent = "Niet beschikbaar";
     }
+  }
 
-    // -------- CPU TEST --------
-    async function runCpuTest() {
-      const out = document.getElementById("cpuResult");
-      out.textContent = "Test bezig…";
+  // -------- CPU TEST --------
+  async function runCpuTest() {
+    const out = document.getElementById("cpuResult");
+    out.textContent = "Test bezig…";
 
-      await new Promise(r => setTimeout(r, 50)); // kleine pauze
+    await new Promise(r => setTimeout(r, 50)); // kleine pauze
 
-      const iterations = 5_000_000;
-      const start = performance.now();
-      let x = 0;
-      for (let i = 0; i < iterations; i++) {
-        x += Math.sqrt(i % 1000);
-      }
-      const end = performance.now();
-      const ms = end - start;
-
-      let score;
-      if (ms < 300) score = "⚡ Zeer snel";
-      else if (ms < 700) score = "✅ Prima";
-      else if (ms < 1500) score = "⚠️ Langzamer systeem";
-      else score = "🐢 Erg traag of zwaar belast";
-
-      out.innerHTML =
-        `<p>${score}</p>` +
-        `<p>Gemeten tijd: <strong>${ms.toFixed(0)} ms</strong> voor ${iterations.toLocaleString("nl-NL")} bewerkingen.</p>`;
+    const iterations = 5_000_000;
+    const start = performance.now();
+    let x = 0;
+    for (let i = 0; i < iterations; i++) {
+      x += Math.sqrt(i % 1000);
     }
+    const end = performance.now();
+    const ms = end - start;
 
-    // -------- NETWERKTEST --------
-    async function runNetTest() {
-      const statusEl = document.getElementById("netStatus");
-      const resultEl = document.getElementById("netResult");
+    let score;
+    if (ms < 300) score = "⚡ Zeer snel";
+    else if (ms < 700) score = "✅ Prima";
+    else if (ms < 1500) score = "⚠️ Langzamer systeem";
+    else score = "🐢 Erg traag of zwaar belast";
 
-      // PAS DIT AAN:
-    const TEST_FILE_URL = "assets/speedtest.bin";
-    const TEST_FILE_SIZE_BYTES = 1048576; // als je 1MB hebt gebruikt
+    out.innerHTML =
+      `<p>${score}</p>` +
+      `<p>Gemeten tijd: <strong>${ms.toFixed(0)} ms</strong> voor ${iterations.toLocaleString("nl-NL")} bewerkingen.</p>`;
+  }
 
+  // -------- NETWERKTEST --------
 
-      statusEl.innerHTML = "Test bezig… Dit kan enkele seconden duren.";
+  // << hier zet je jouw testbestand neer >>
+  const TEST_FILE_URL = "assets/speedtest.bin";
+  const TEST_FILE_SIZE_BYTES = 1048576; // ~1 MB
+
+  async function runNetTest() {
+    const statusEl = document.getElementById("netStatus");
+    const resultEl = document.getElementById("netResult");
+
+    statusEl.innerHTML = "Test bezig… Dit kan enkele seconden duren.";
+    resultEl.textContent = "";
+
+    const t0 = performance.now();
+    try {
+      const response = await fetch(TEST_FILE_URL + "?cachebust=" + Date.now(), {
+        cache: "no-store"
+      });
+      const t1 = performance.now();
+
+      if (!response.ok) {
+        throw new Error("HTTP " + response.status);
+      }
+
+      // Bestand echt inlezen, zodat alles binnen is
+      await response.arrayBuffer();
+      const t2 = performance.now();
+
+      const downloadTimeMs = t2 - t0;
+      const downloadTimeSec = downloadTimeMs / 1000;
+      const bits = TEST_FILE_SIZE_BYTES * 8;
+      const mbit = bits / 1_000_000;
+      const mbitPerSec = mbit / downloadTimeSec;
+
+      statusEl.innerHTML = "<strong>Klaar.</strong>";
+      resultEl.innerHTML =
+        `<p>Geschatte downloadsnelheid: <strong>${mbitPerSec.toFixed(2)} Mbit/s</strong></p>` +
+        `<p>Totale downloadtijd: ${downloadTimeSec.toFixed(2)} s voor ~${(TEST_FILE_SIZE_BYTES / 1024).toFixed(0)} KB.</p>`;
+    } catch (err) {
+      statusEl.innerHTML = `<span class="error">Fout tijdens test: ${err.message}</span>`;
       resultEl.textContent = "";
-
-      const t0 = performance.now();
-      try {
-        const response = await fetch(testUrl + "?cachebust=" + Date.now(), {
-          cache: "no-store"
-        });
-        const t1 = performance.now();
-
-        if (!response.ok) {
-          throw new Error("HTTP " + response.status);
-        }
-
-        // We lezen het bestand om zeker te zijn dat alles is binnengehaald
-        await response.arrayBuffer();
-        const t2 = performance.now();
-
-        const downloadTimeMs = t2 - t0;
-        const downloadTimeSec = downloadTimeMs / 1000;
-        const bits = fileSizeBytes * 8;
-        const mbit = bits / 1_000_000;
-        const mbitPerSec = mbit / downloadTimeSec;
-
-        statusEl.innerHTML = "<strong>Klaar.</strong>";
-        resultEl.innerHTML =
-          `<p>Geschatte downloadsnelheid: <strong>${mbitPerSec.toFixed(2)} Mbit/s</strong></p>` +
-          `<p>Totale downloadtijd: ${downloadTimeSec.toFixed(2)} s voor ~${(fileSizeBytes / 1024).toFixed(0)} KB.</p>`;
-      } catch (err) {
-        statusEl.innerHTML = `<span class="error">Fout tijdens test: ${err.message}</span>`;
-        resultEl.textContent = "";
-      }
     }
+  }
 
-    // -------- INIT --------
-    window.addEventListener("DOMContentLoaded", () => {
-      initSystemInfo();
-      document.getElementById("cpuTestBtn").addEventListener("click", runCpuTest);
-      document.getElementById("netTestBtn").addEventListener("click", runNetTest);
-    });
+  // -------- INIT --------
+  window.addEventListener("DOMContentLoaded", () => {
+    initSystemInfo();
+    document.getElementById("cpuTestBtn").addEventListener("click", runCpuTest);
+    document.getElementById("netTestBtn").addEventListener("click", runNetTest);
+  });
 
-    window.addEventListener("online", () => {
-      document.getElementById("onlineInfo").textContent = "Online";
-    });
-    window.addEventListener("offline", () => {
-      document.getElementById("onlineInfo").textContent = "Offline";
-    });
-  </script>
+  window.addEventListener("online", () => {
+    document.getElementById("onlineInfo").textContent = "Online";
+  });
+  window.addEventListener("offline", () => {
+    document.getElementById("onlineInfo").textContent = "Offline";
+  });
+</script>
 </body>
 </html>
