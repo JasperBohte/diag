@@ -352,8 +352,9 @@
       const resultEl = document.getElementById("netResult");
 
       // PAS DIT AAN:
-      const testUrl = "testfile.bin";  // zet hier een testbestand in dezelfde map
-      const fileSizeBytes = 500_000;   // vul hier de echte bestandsgrootte in bytes in
+    const TEST_FILE_URL = "assets/speedtest.bin";
+    const TEST_FILE_SIZE_BYTES = 1048576; // als je 1MB hebt gebruikt
+
 
       statusEl.innerHTML = "Test bezig… Dit kan enkele seconden duren.";
       resultEl.textContent = "";
