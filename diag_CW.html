@@ -110,20 +110,15 @@
       border-bottom: none;
     }
 
-    .kv-key {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
+    .kv-key { color: var(--muted); font-size: 12px; }
     .kv-value {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-family: ui-monospace, monospace;
       font-size: 12px;
       text-align: right;
-      word-break: break-all;
     }
 
     .btn-row {
-      margin-top: 8px;
+      margin-top: 10px;
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
@@ -141,7 +136,7 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 0 0 1px rgba(56,189,248,0.4);
+      box-shadow: 0 0 0 1px rgba(56,189,248,0.35);
     }
 
     button:hover {
@@ -158,18 +153,8 @@
       color: var(--muted);
     }
 
-    .error {
-      color: var(--error);
-    }
-
-    .results {
-      margin-top: 4px;
-      font-size: 13px;
-    }
-
-    .results p {
-      margin: 2px 0;
-    }
+    .error { color: var(--error); }
+    .results { margin-top: 4px; }
 
     .small {
       font-size: 11px;
@@ -178,9 +163,7 @@
     }
 
     @media (max-width: 720px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
+      .grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -196,33 +179,15 @@
     </p>
 
     <div class="grid">
-      <!-- Systeemkaart -->
+      <!-- SYSTEEM -->
       <section class="card">
         <h2>Systeem</h2>
-        <div class="kv-row">
-          <span class="kv-key">Besturingssysteem</span>
-          <span class="kv-value" id="osInfo">–</span>
-        </div>
-        <div class="kv-row">
-          <span class="kv-key">Browser</span>
-          <span class="kv-value" id="browserInfo">–</span>
-        </div>
-        <div class="kv-row">
-          <span class="kv-key">Taal</span>
-          <span class="kv-value" id="langInfo">–</span>
-        </div>
-        <div class="kv-row">
-          <span class="kv-key">CPU cores</span>
-          <span class="kv-value" id="cpuInfo">–</span>
-        </div>
-        <div class="kv-row">
-          <span class="kv-key">Geheugen</span>
-          <span class="kv-value" id="ramInfo">–</span>
-        </div>
-        <div class="kv-row">
-          <span class="kv-key">Scherm</span>
-          <span class="kv-value" id="screenInfo">–</span>
-        </div>
+        <div class="kv-row"><span class="kv-key">Besturingssysteem</span><span class="kv-value" id="osInfo">–</span></div>
+        <div class="kv-row"><span class="kv-key">Browser</span><span class="kv-value" id="browserInfo">–</span></div>
+        <div class="kv-row"><span class="kv-key">Taal</span><span class="kv-value" id="langInfo">–</span></div>
+        <div class="kv-row"><span class="kv-key">CPU cores</span><span class="kv-value" id="cpuInfo">–</span></div>
+        <div class="kv-row"><span class="kv-key">Geheugen</span><span class="kv-value" id="ramInfo">–</span></div>
+        <div class="kv-row"><span class="kv-key">Scherm</span><span class="kv-value" id="screenInfo">–</span></div>
 
         <div class="btn-row">
           <button id="cpuTestBtn" type="button">🧮 CPU-test</button>
@@ -230,25 +195,13 @@
         <div class="results" id="cpuResult"></div>
       </section>
 
-      <!-- Netwerkkaart -->
+      <!-- NETWERK -->
       <section class="card">
         <h2>Netwerk</h2>
-        <div class="kv-row">
-          <span class="kv-key">Status</span>
-          <span class="kv-value" id="onlineInfo">–</span>
-        </div>
-        <div class="kv-row">
-          <span class="kv-key">Type</span>
-          <span class="kv-value" id="connType">–</span>
-        </div>
-        <div class="kv-row">
-          <span class="kv-key">Downlink</span>
-          <span class="kv-value" id="connDownlink">–</span>
-        </div>
-        <div class="kv-row">
-          <span class="kv-key">RTT</span>
-          <span class="kv-value" id="connRtt">–</span>
-        </div>
+        <div class="kv-row"><span class="kv-key">Status</span><span class="kv-value" id="onlineInfo">–</span></div>
+        <div class="kv-row"><span class="kv-key">Type</span><span class="kv-value" id="connType">–</span></div>
+        <div class="kv-row"><span class="kv-key">Downlink</span><span class="kv-value" id="connDownlink">–</span></div>
+        <div class="kv-row"><span class="kv-key">RTT</span><span class="kv-value" id="connRtt">–</span></div>
 
         <div class="btn-row">
           <button id="netTestBtn" type="button">📡 Snelheidstest</button>
@@ -258,8 +211,8 @@
       </section>
     </div>
 
-    <!-- Verstuurknop naar CW -->
-    <div class="btn-row" style="margin-top: 12px;">
+    <!-- VERZENDKNOP -->
+    <div class="btn-row" style="margin-top: 16px;">
       <button id="sendBtn" type="button">📤 Verstuur resultaten naar CW</button>
       <span id="sendStatus" class="status"></span>
     </div>
@@ -270,25 +223,25 @@
   </div>
 
   <script>
-    // Testbestand voor simpele snelheidstest
-    const TEST_FILE_URL = "assets/speedtest.bin";
-    const TEST_FILE_SIZE_BYTES = 1048576; // 1 MB
+    // ==== CONFIG ====
+    const TEST_FILE_URL = "assets/speedtest.bin";        // 1 MB testbestand
+    const TEST_FILE_SIZE_BYTES = 1048576;                // 1 MB
 
-    // ---- HIER JOUW SCRIPT-URL INVULLEN ----
-    const SHEET_API_URL = "https://script.google.com/macros/s/...../exec"; // vervang door jouw Web App URL
+    // URL van je Apps Script Web App (eindigt op /exec)
+    const SHEET_API_URL = "https://script.google.com/a/macros/contactworx.nl/s/AKfycbwNKXanJgL5lFokmRXassJ0mTXM33_VVJpHhG-tl-KSiQ4tr8e_Io4ULLOh3BvFifpw/exec";
 
+    // ==== SYSTEEMINFO ====
     function getPrettyBrowser() {
       const ua = navigator.userAgent || "";
       if (ua.includes("Edg")) return "Microsoft Edge";
-      if (ua.includes("OPR") || ua.includes("Opera")) return "Opera";
-      if (ua.includes("Firefox")) return "Mozilla Firefox";
       if (ua.includes("Chrome")) return "Google Chrome";
+      if (ua.includes("Firefox")) return "Mozilla Firefox";
       if (ua.includes("Safari")) return "Safari";
       return "Onbekend";
     }
 
     function initSystemInfo() {
-      document.getElementById("browserInfo").textContent = getPrettyBrowser() + " (" + (navigator.userAgent || "") + ")";
+      document.getElementById("browserInfo").textContent = getPrettyBrowser();
       document.getElementById("osInfo").textContent = navigator.platform || "Onbekend";
       document.getElementById("langInfo").textContent = navigator.language || "Onbekend";
 
@@ -302,10 +255,8 @@
           ? navigator.deviceMemory + " GB (browser-schatting)"
           : "Niet beschikbaar";
 
-      const w = window.screen?.width;
-      const h = window.screen?.height;
       document.getElementById("screenInfo").textContent =
-        (w && h) ? `${w} × ${h}` : "Onbekend";
+        (screen.width && screen.height) ? `${screen.width} × ${screen.height}` : "Onbekend";
 
       document.getElementById("onlineInfo").textContent =
         navigator.onLine ? "Online" : "Offline";
@@ -324,10 +275,10 @@
       }
     }
 
+    // ==== CPU-TEST ====
     async function runCpuTest() {
       const out = document.getElementById("cpuResult");
       out.textContent = "Test bezig…";
-
       await new Promise(r => setTimeout(r, 50));
 
       const iterations = 5_000_000;
@@ -339,16 +290,17 @@
       const ms = performance.now() - start;
 
       let score;
-      if (ms < 300) score = "⚡ Zeer snel";
-      else if (ms < 700) score = "✅ Prima";
+      if (ms < 300)      score = "⚡ Zeer snel";
+      else if (ms < 700)  score = "✅ Prima";
       else if (ms < 1500) score = "⚠️ Langzamer systeem";
-      else score = "🐢 Erg traag of zwaar belast";
+      else                score = "🐢 Erg traag of zwaar belast";
 
       out.innerHTML =
         `<p>${score}</p>` +
         `<p>Gemeten tijd: <strong>${ms.toFixed(0)} ms</strong> voor ${iterations.toLocaleString("nl-NL")} bewerkingen.</p>`;
     }
 
+    // ==== NETWERKTEST ====
     async function runNetTest() {
       const statusEl = document.getElementById("netStatus");
       const resultEl = document.getElementById("netResult");
@@ -358,9 +310,7 @@
 
       const t0 = performance.now();
       try {
-        const res = await fetch(TEST_FILE_URL + "?t=" + Date.now(), {
-          cache: "no-store"
-        });
+        const res = await fetch(TEST_FILE_URL + "?t=" + Date.now(), { cache: "no-store" });
         if (!res.ok) throw new Error("HTTP " + res.status);
 
         await res.arrayBuffer();
@@ -375,11 +325,12 @@
           `<p>Geschatte downloadsnelheid: <strong>${mbitps.toFixed(2)} Mbit/s</strong></p>` +
           `<p>Totale downloadtijd: ${sec.toFixed(2)} s voor ~${(TEST_FILE_SIZE_BYTES / 1024).toFixed(0)} KB.</p>`;
       } catch (e) {
-        statusEl.innerHTML = `<span class="error">Fout: ${e.message}</span>`;
+        statusEl.innerHTML = `<span class="error">Fout tijdens test: ${e.message}</span>`;
         resultEl.textContent = "";
       }
     }
 
+    // ==== VERSTUREN NAAR SHEET ====
     function getText(id) {
       const el = document.getElementById(id);
       return el ? el.textContent.trim() : "";
@@ -405,51 +356,34 @@
       };
 
       try {
-        const response = await fetch(SHEET_API_URL, {
+        await fetch(SHEET_API_URL, {
           method: "POST",
+          mode: "no-cors", // voorkomt CORS/preflight problemen met Apps Script
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "text/plain;charset=utf-8"
           },
           body: JSON.stringify(payload)
         });
 
-        let ok = false;
-        if (response.ok) {
-          const data = await response.json().catch(() => null);
-          ok = data && data.status === "ok";
-        }
-
-        if (ok) {
-          statusEl.innerHTML = "<strong>Verzonden naar CW 👍</strong>";
-        } else {
-          statusEl.innerHTML =
-            "<span class='error'>Verzending mogelijk mislukt (controleer de Sheet/console).</span>";
-        }
+        // In no-cors kunnen we het antwoord niet lezen, dus we gaan uit van succes
+        statusEl.innerHTML = "<strong>Verzonden (controleer de CW-sheet).</strong>";
       } catch (err) {
-        statusEl.innerHTML =
-          "<span class='error'>Fout bij verzenden: " + err.message + "</span>";
+        statusEl.innerHTML = "<span class='error'>Fout bij verzenden: " + err.message + "</span>";
       }
     }
 
-    window.addEventListener("DOMContentLoaded", () => {
+    // ==== INIT ====
+    function init() {
       initSystemInfo();
+      document.getElementById("cpuTestBtn").addEventListener("click", runCpuTest);
+      document.getElementById("netTestBtn").addEventListener("click", runNetTest);
+      document.getElementById("sendBtn").addEventListener("click", sendResultsToSheet);
 
-      const cpuBtn = document.getElementById("cpuTestBtn");
-      const netBtn = document.getElementById("netTestBtn");
-      const sendBtn = document.getElementById("sendBtn");
+      window.addEventListener("online",  () => document.getElementById("onlineInfo").textContent = "Online");
+      window.addEventListener("offline", () => document.getElementById("onlineInfo").textContent = "Offline");
+    }
 
-      if (cpuBtn) cpuBtn.addEventListener("click", runCpuTest);
-      if (netBtn) netBtn.addEventListener("click", runNetTest);
-      if (sendBtn) sendBtn.addEventListener("click", sendResultsToSheet);
-    });
-
-    window.addEventListener("online", () => {
-      document.getElementById("onlineInfo").textContent = "Online";
-    });
-
-    window.addEventListener("offline", () => {
-      document.getElementById("onlineInfo").textContent = "Offline";
-    });
+    window.addEventListener("DOMContentLoaded", init);
   </script>
 </body>
 </html>
