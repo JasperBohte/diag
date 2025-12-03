@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Snelle PC & netwerk check</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #020617;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #38bdf8;
+      --error: #f97373;
+      --border: rgba(148,163,184,0.4);
+      --radius: 14px;
+      --shadow: 0 18px 40px rgba(15,23,42,0.8);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: radial-gradient(circle at top, #1f2937 0, #020617 60%, #020617 100%);
+      color: var(--text);
+    }
+
+    .app {
+      width: 100%;
+      max-width: 900px;
+      background: linear-gradient(135deg, rgba(15,23,42,0.98), rgba(15,23,42,0.98));
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 18px 20px 16px;
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      font-size: 22px;
+      letter-spacing: 0.03em;
+    }
+
+    .subtitle {
+      margin: 0 0 16px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      margin-bottom: 6px;
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 8px rgba(34,197,94,0.9);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
+      gap: 14px;
+    }
+
+    .card {
+      background: radial-gradient(circle at 0 0, rgba(15,23,42,1), #020617);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      font-size: 13px;
+    }
+
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 15px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+    }
+
+    .kv-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 3px 0;
+      border-bottom: 1px dashed rgba(148,163,184,0.3);
+    }
+
+    .kv-row:last-child {
+      border-bottom: none;
+    }
+
+    .kv-key {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .kv-value {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      text-align: right;
+      color: #e5e7eb;
+      word-break: break-all;
+    }
+
+    .btn-row {
+      margin: 12px 0 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    button {
+      border-radius: 999px;
+      border: 1px solid rgba(56,189,248,0.8);
+      background: radial-gradient(circle at 0 0, rgba(56,189,248,0.28), #020617);
+      color: #e0f2fe;
+      font-size: 13px;
+      padding: 7px 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: 0 0 0 1px rgba(56,189,248,0.4);
+    }
+
+    button:hover {
+      box-shadow: 0 0 0 1px rgba(56,189,248,0.8);
+      background: radial-gradient(circle at 0 0, rgba(56,189,248,0.4), #020617);
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .status {
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .status strong {
+      color: var(--accent);
+    }
+
+    .error {
+      color: var(--error);
+    }
+
+    .results {
+      margin-top: 4px;
+      font-size: 13px;
+    }
+
+    .results p {
+      margin: 2px 0;
+    }
+
+    .small {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    @media (max-width: 720px) {
+      .grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="badge">
+      <span class="badge-dot"></span>
+      Snelle check · Browser & netwerk
+    </div>
+    <h1>PC & netwerk–diagnose</h1>
+    <p class="subtitle">
+      Laat deze pagina volledig laden en klik op <strong>“Snelheidstest starten”</strong>. Maak daarna een screenshot en stuur die door naar je contactpersoon.
+    </p>
+
+    <div class="grid">
+      <!-- SYSTEEMINFO -->
+      <section class="card">
+        <h2>Systeem & browser</h2>
+        <div class="kv-row">
+          <span class="kv-key">Besturingssysteem</span>
+          <span class="kv-value" id="osInfo">–</span>
+        </div>
+        <div class="kv-row">
+          <span class="kv-key">Browser</span>
+          <span class="kv-value" id="browserInfo">–</span>
+        </div>
+        <div class="kv-row">
+          <span class="kv-key">Taal</span>
+          <span class="kv-value" id="langInfo">–</span>
+        </div>
+        <div class="kv-row">
+          <span class="kv-key">CPU cores (logisch)</span>
+          <span class="kv-value" id="cpuInfo">–</span>
+        </div>
+        <div class="kv-row">
+          <span class="kv-key">Geschat geheugen</span>
+          <span class="kv-value" id="ramInfo">–</span>
+        </div>
+        <div class="kv-row">
+          <span class="kv-key">Schermresolutie</span>
+          <span class="kv-value" id="screenInfo">–</span>
+        </div>
+
+        <div class="btn-row">
+          <button id="cpuTestBtn" type="button">🧮 CPU snelheidstest</button>
+        </div>
+        <div class="results" id="cpuResult"></div>
+        <p class="small">
+          CPU-test: een simpele rekenlus in JavaScript. Dit is geen echte benchmark, maar geeft een indruk van de relatieve snelheid.
+        </p>
+      </section>
+
+      <!-- NETWERK -->
+      <section class="card">
+        <h2>Netwerk & snelheid</h2>
+        <div class="kv-row">
+          <span class="kv-key">Online status</span>
+          <span class="kv-value" id="onlineInfo">–</span>
+        </div>
+        <div class="kv-row">
+          <span class="kv-key">Type verbinding</span>
+          <span class="kv-value" id="connType">–</span>
+        </div>
+        <div class="kv-row">
+          <span class="kv-key">Geschatte downlink</span>
+          <span class="kv-value" id="connDownlink">–</span>
+        </div>
+        <div class="kv-row">
+          <span class="kv-key">Geschatte RTT</span>
+          <span class="kv-value" id="connRtt">–</span>
+        </div>
+
+        <div class="btn-row">
+          <button id="netTestBtn" type="button">📡 Snelheidstest starten</button>
+        </div>
+        <div class="status" id="netStatus">Nog geen test uitgevoerd.</div>
+        <div class="results" id="netResult"></div>
+        <p class="small">
+          De snelheidstest downloadt een klein testbestand één keer en berekent een ruwe inschatting van je downloadsnelheid.
+        </p>
+      </section>
+    </div>
+
+    <p class="small">
+      Let op: deze diagnose is indicatief. Voor een officiële meting gebruik je een speedtest of monitoringtool.
+    </p>
+  </div>
+
+  <script>
+    // -------- BASISINFO --------
+    function initSystemInfo() {
+      const ua = navigator.userAgent || "";
+      document.getElementById("browserInfo").textContent = ua || "Onbekend";
+
+      document.getElementById("osInfo").textContent =
+        navigator.platform || "Onbekend";
+
+      document.getElementById("langInfo").textContent =
+        navigator.language || "Onbekend";
+
+      document.getElementById("cpuInfo").textContent =
+        (navigator.hardwareConcurrency
+          ? navigator.hardwareConcurrency + " cores"
+          : "Niet beschikbaar");
+
+      document.getElementById("ramInfo").textContent =
+        (navigator.deviceMemory
+          ? navigator.deviceMemory + " GB (geschat)"
+          : "Niet beschikbaar");
+
+      const w = window.screen?.width;
+      const h = window.screen?.height;
+      document.getElementById("screenInfo").textContent =
+        (w && h) ? `${w}×${h}` : "Onbekend";
+
+      document.getElementById("onlineInfo").textContent =
+        navigator.onLine ? "Online" : "Offline";
+
+      const conn = navigator.connection || navigator.webkitConnection || navigator.mozConnection;
+      if (conn) {
+        document.getElementById("connType").textContent = conn.effectiveType || conn.type || "Onbekend";
+        document.getElementById("connDownlink").textContent =
+          conn.downlink ? conn.downlink + " Mbit/s (schatting)" : "Niet beschikbaar";
+        document.getElementById("connRtt").textContent =
+          conn.rtt ? conn.rtt + " ms (schatting)" : "Niet beschikbaar";
+      } else {
+        document.getElementById("connType").textContent = "Niet beschikbaar";
+        document.getElementById("connDownlink").textContent = "Niet beschikbaar";
+        document.getElementById("connRtt").textContent = "Niet beschikbaar";
+      }
+    }
+
+    // -------- CPU TEST --------
+    async function runCpuTest() {
+      const out = document.getElementById("cpuResult");
+      out.textContent = "Test bezig…";
+
+      await new Promise(r => setTimeout(r, 50)); // kleine pauze
+
+      const iterations = 5_000_000;
+      const start = performance.now();
+      let x = 0;
+      for (let i = 0; i < iterations; i++) {
+        x += Math.sqrt(i % 1000);
+      }
+      const end = performance.now();
+      const ms = end - start;
+
+      let score;
+      if (ms < 300) score = "⚡ Zeer snel";
+      else if (ms < 700) score = "✅ Prima";
+      else if (ms < 1500) score = "⚠️ Langzamer systeem";
+      else score = "🐢 Erg traag of zwaar belast";
+
+      out.innerHTML =
+        `<p>${score}</p>` +
+        `<p>Gemeten tijd: <strong>${ms.toFixed(0)} ms</strong> voor ${iterations.toLocaleString("nl-NL")} bewerkingen.</p>`;
+    }
+
+    // -------- NETWERKTEST --------
+    async function runNetTest() {
+      const statusEl = document.getElementById("netStatus");
+      const resultEl = document.getElementById("netResult");
+
+      // PAS DIT AAN:
+      const testUrl = "testfile.bin";  // zet hier een testbestand in dezelfde map
+      const fileSizeBytes = 500_000;   // vul hier de echte bestandsgrootte in bytes in
+
+      statusEl.innerHTML = "Test bezig… Dit kan enkele seconden duren.";
+      resultEl.textContent = "";
+
+      const t0 = performance.now();
+      try {
+        const response = await fetch(testUrl + "?cachebust=" + Date.now(), {
+          cache: "no-store"
+        });
+        const t1 = performance.now();
+
+        if (!response.ok) {
+          throw new Error("HTTP " + response.status);
+        }
+
+        // We lezen het bestand om zeker te zijn dat alles is binnengehaald
+        await response.arrayBuffer();
+        const t2 = performance.now();
+
+        const downloadTimeMs = t2 - t0;
+        const downloadTimeSec = downloadTimeMs / 1000;
+        const bits = fileSizeBytes * 8;
+        const mbit = bits / 1_000_000;
+        const mbitPerSec = mbit / downloadTimeSec;
+
+        statusEl.innerHTML = "<strong>Klaar.</strong>";
+        resultEl.innerHTML =
+          `<p>Geschatte downloadsnelheid: <strong>${mbitPerSec.toFixed(2)} Mbit/s</strong></p>` +
+          `<p>Totale downloadtijd: ${downloadTimeSec.toFixed(2)} s voor ~${(fileSizeBytes / 1024).toFixed(0)} KB.</p>`;
+      } catch (err) {
+        statusEl.innerHTML = `<span class="error">Fout tijdens test: ${err.message}</span>`;
+        resultEl.textContent = "";
+      }
+    }
+
+    // -------- INIT --------
+    window.addEventListener("DOMContentLoaded", () => {
+      initSystemInfo();
+      document.getElementById("cpuTestBtn").addEventListener("click", runCpuTest);
+      document.getElementById("netTestBtn").addEventListener("click", runNetTest);
+    });
+
+    window.addEventListener("online", () => {
+      document.getElementById("onlineInfo").textContent = "Online";
+    });
+    window.addEventListener("offline", () => {
+      document.getElementById("onlineInfo").textContent = "Offline";
+    });
+  </script>
+</body>
+</html>
